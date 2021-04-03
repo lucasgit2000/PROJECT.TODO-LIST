@@ -10,9 +10,22 @@
   .navbar-links > a
     margin-right: 25px
     font-size: 1rem
+    cursor: pointer
+
+  .new-task
+    border: 1px solid black
+    border-radius: 50%
+    padding: 5px 11px 5px 11px
+    text-align: center
+
+  .new-3task
+    border: 1px solid black
+    border-radius: 50%
+    padding: 5px
+    text-align: center
 
 .main-content
-  padding: 3rem
+  // padding: 3rem
   margin: 50px 0 0 0
   display: flex
   flex-direction: column
@@ -21,25 +34,60 @@
     margin-bottom: 100px
     display: flex
     flex-direction: row
-    justify-content: center
+    justify-content: space-evenly
+    height: 100px
 
     .pending-box
       display: flex
-      flex-basis: 100px
+      align-items: center
+      justify-content: center
+      width: 30%
+      border: 1px solid black
+      border-radius: 10px
+      -webkit-box-shadow: 7px 6px 18px -6px rgba(0,0,0,0.66)
+      -moz-box-shadow: 7px 6px 18px -6px rgba(0,0,0,0.66)
+      box-shadow: 7px 6px 18px -6px rgba(0,0,0,0.66)
+      cursor: pointer
 
     .done-box
+      display: flex
+      align-items: center
+      justify-content: center
+      width: 30%
+      border: 1px solid black
+      border-radius: 10px
+      -webkit-box-shadow: 7px 6px 18px -6px rgba(0,0,0,0.66)
+      -moz-box-shadow: 7px 6px 18px -6px rgba(0,0,0,0.66)
+      box-shadow: 7px 6px 18px -6px rgba(0,0,0,0.66)
+      cursor: pointer
 
 .tasks
-  font-size: 0.8rem
+  font-size: 0.7rem
 
   ul
     display: flex
+    padding: 0
     flex-direction: column
     align-items: center
     list-style: none
 
+    li:nth-child(odd)
+      background: #F8F8F8
+
   ul > li
+    display: flex
+    flex-direction: row
     margin-bottom: 60px
+    border: 1px solid black
+    border-radius: 10px
+    padding: 12px
+
+  ul > li > .circle
+    margin-right: 20px
+    border: 1px solid black
+    border-radius: 50%
+    width: 15px
+    cursor: pointer
 
 .pagination
   display: flex
@@ -48,3 +96,6 @@
   bottom: 1
   justify-content: space-evenly
   width: 100%
+
+  a
+    cursor: pointer
