@@ -9,3 +9,16 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model Task {
+  id          Int          @id @default(autoincrement())
+  description String
+  statusId    Int
+  status      TaskStatuses @relation(fields: [statusId], references: [id])
+}
+
+model TaskStatuses {
+  id          Int    @id @default(autoincrement())
+  description String
+  task        Task?
+}
