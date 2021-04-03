@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faArrowLeft, faCheckSquare, faListAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +8,8 @@ import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 })
 export class AppComponent {
   title = 'my-app';
-  faCoffee = faCoffee;
+  faArrowRight = faArrowRight;
+  faArrowLeft = faArrowLeft;
+  faListAlt = faListAlt;
+  faCheckSquare = faCheckSquare;
 }

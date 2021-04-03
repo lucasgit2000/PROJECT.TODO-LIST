@@ -1,18 +1,51 @@
 <!-- Toolbar -->
-<div class="toolbar">
-  <span>Aqui estão suas tarefas</span>
+<nav class="navbar">
+  <div class="navbar-title">
+    <span>Aqui estão suas tarefas</span>
+  </div>
+  <div class="navbar-links">
     <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task">
       +
     </a>
     <a aria-label="Ocioso" title="Novas Tarefas Ocioso" class="new-3task">
-    +3
+      + 3
     </a>
-</div>
+  </div>
+</nav>
 
-<div class="content" role="main">
-
-
-
-</div>
+<main class="main-content">
+  <nav class="status-navigation">
+    <div class="pending-box">
+      <fa-icon [icon]="faListAlt"></fa-icon>
+    </div>
+    <div class="done-box">
+      <fa-icon [icon]="faCheckSquare"></fa-icon>
+    </div>
+  </nav>
+  <div class="tasks">
+    <ul>
+      <li>Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim. Labore minim pariatur id
+        culpa ipsum minim.
+      </li>
+      <li>Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim. Labore minim pariatur id
+        culpa ipsum minim.
+      </li>
+      <li>Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim. Labore minim pariatur id
+        culpa ipsum minim.
+      </li>
+      <li>Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim. Labore minim pariatur id
+        culpa ipsum minim.
+      </li>
+    </ul>
+  </div>
+</main>
+<footer class="pagination">
+  <a aria-label="Página Anterior" title="Página Anterior" class="last-page">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </a>
+  <a aria-label="Próxima Página" title="Próxima Página" class="next-page">
+    <fa-icon [icon]="faArrowRight"></fa-icon>
+  </a>
+</footer>
 
 <router-outlet></router-outlet>
