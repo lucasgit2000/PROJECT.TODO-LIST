@@ -8,6 +8,6 @@ The applications were containerized to improve the experience of running them on
 
 ### Executing postgres bash and login database defined on docker file
 
-- docker exec -ti postgres bash
+- docker exec -ti backend_postgres_1 bash
 - psql -h postgres -U user db
 - pass

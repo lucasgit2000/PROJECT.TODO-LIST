@@ -15,5 +15,8 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "@babel/register": "^7.9.0"
+  },
+  "devDependencies": {
+    "prisma": "^2.20.1"
   }
 }
