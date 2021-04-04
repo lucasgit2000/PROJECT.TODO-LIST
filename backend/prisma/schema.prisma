@@ -20,5 +20,5 @@ model Task {
 model TaskStatuses {
   id          Int    @id @default(autoincrement())
   description String
-  task        Task?
+  task        Task[]
 }
