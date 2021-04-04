@@ -1,9 +1,12 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const PENDING_ID = 1;
+const DONE_ID = 2;
+
 async function main() {
   await prisma.taskStatuses.upsert({
-    where: { id: 1 },
+    where: { id: PENDING_ID },
     update: {},
     create: {
       description: "pending",
@@ -11,7 +14,7 @@ async function main() {
   });
 
   await prisma.taskStatuses.upsert({
-    where: { id: 2 },
+    where: { id: DONE_ID },
     update: {},
     create: {
       description: "done",
@@ -27,3 +30,8 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+  
+  module.exports = Object.freeze({
+    PENDING_ID,
+    DONE_ID
+});

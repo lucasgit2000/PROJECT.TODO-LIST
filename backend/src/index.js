@@ -3,6 +3,7 @@ express = require("express");
 const axios = require("axios");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const statusConstants = require("../prisma/seed");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 */
 app.get("/tasks/:taskStatus", (req, res) => {
   const { taskStatus } = req.params;
+  //TODO: pagination
 
   prisma.task
     .findMany({
@@ -26,7 +28,7 @@ app.get("/tasks/:taskStatus", (req, res) => {
       },
     })
     .then((data) => {
-      return res.json([data]);
+      return res.json(data);
     })
     .catch((err) => {
       return res.status(400).send({
@@ -40,6 +42,8 @@ app.get("/tasks/:taskStatus", (req, res) => {
 
 /* 
     Create task 
+
+    ps: default status pending
 */
 app.post("/tasks", (req, res) => {
   const { description, supervisor_name, supervisor_email } = req.body;
@@ -57,41 +61,51 @@ app.post("/tasks", (req, res) => {
       },
     })
     .then((response) => {
-      if (!response.format_valid) {
+      if (!response.data.format_valid || response.data.did_you_mean !== "") {
         const messageResponse =
-          !response.did_you_mean || response.did_you_mean === ""
-            ? `email format invalid, please try again`
-            : `email format invalid, didn't you mean ${response.did_you_mean}?`;
+          response.data.did_you_mean === ""
+            ? `email format invalid, please check the spelling and try again`
+            : `email format invalid, didn't you mean ${response.data.did_you_mean}?`;
 
         return res.status(400).send({
           message: messageResponse,
         });
       }
-      prisma.task.create({
-        data: {
-          description,
-          supervisor_name,
-          supervisor_email,
-        },
-      });
-    })
-    .then((data) => {
-      return res.json([data]);
+
+      prisma.task
+        .create({
+          data: {
+            description,
+            supervisor_name,
+            supervisor_email,
+            statusId: statusConstants.PENDING_ID,
+          },
+        })
+        .then((data) => {
+          return res.json(data);
+        })
+        .catch((err) => {
+          return res.status(400).send({
+            message: err["message"] ? err["message"] : "an error ocurred",
+          });
+        })
+        .finally(async () => {
+          await prisma.$disconnect();
+        });
     })
     .catch((err) => {
       return res.status(400).send({
         message: err["message"] ? err["message"] : "an error ocurred",
       });
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
     });
 });
 
 /* 
     Create 3 tasks for idle user
+
+    ps: default status pending
 */
-app.post("/tasks/many", (req, res) => {
+app.post("/tasks/for_idle_user", (req, res) => {
   axios
     .get("https://cat-fact.herokuapp.com/facts/random", {
       params: {
@@ -100,15 +114,16 @@ app.post("/tasks/many", (req, res) => {
       },
     })
     .then((response) => {
-      const tasksToBeCreated = new Array();
+      let tasksToBeCreated = new Array();
 
-      for (let index = 0; index < response.length; index++) {
-        const dogFact = response[index];
+      for (let index = 0; index < response.data.length; index++) {
+        const dogFact = response.data[index];
 
         tasksToBeCreated[index] = {
           description: dogFact.text,
           supervisor_name: "Eu",
           supervisor_email: "eu@me.com",
+          statusId: statusConstants.PENDING_ID,
         };
       }
 
@@ -117,16 +132,22 @@ app.post("/tasks/many", (req, res) => {
           data: tasksToBeCreated,
         })
         .then((data) => {
-          return res.json([data]);
+          console.log(data);
+          return res.json(data);
+        })
+        .catch((err) => {
+          return res.status(400).send({
+            message: err["message"] ? err["message"] : "an error ocurred",
+          });
+        })
+        .finally(async () => {
+          await prisma.$disconnect();
         });
     })
     .catch((err) => {
       return res.status(400).send({
         message: err["message"] ? err["message"] : "an error ocurred",
       });
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
     });
 });
 
@@ -146,47 +167,60 @@ app.put("/tasks", (req, res) => {
           message: `There's no such status as '${taskStatus}'`,
         });
 
-      prisma.task.findFirst().then((data) => {
-        if (!data)
-          return res.status(400).send({
-            message: "task doesn't exist",
-          });
+      prisma.task
+        .findFirst({ where: { id: taskId } })
+        .then((data) => {
+          console.log(data);
+          if (!data)
+            return res.status(400).send({
+              message: "task doesn't exist",
+            });
 
-        if (data.timesUpdatedToPending > 2)
-          return res.status(400).send({
-            message: "task reached the pending status update limit",
-          });
+          if (data.timesUpdatedToPending >= 2)
+            return res.status(400).send({
+              message: "task reached pending status update limit",
+            });
 
-        if (taskStatus === "pending" && password !== "TrabalheNaSaipos")
-          return res.status(400).send({
-            message: "incorrect password",
-          });
+          if (taskStatus === "pending" && password !== "TrabalheNaSaipos")
+            return res.status(400).send({
+              message: "incorrect password",
+            });
 
-        prisma.task
-          .update({
-            where: {
-              id: taskId,
-            },
-            data: {
-              statusId: status.id,
-              timesUpdatedToPending:
-                taskStatus === "pending"
-                  ? data.timesUpdatedToPending + 1
-                  : data.timesUpdatedToPending,
-            },
-          })
-          .then((data) => {
-            return res.json([data]);
+          prisma.task
+            .update({
+              where: {
+                id: taskId,
+              },
+              data: {
+                statusId: status.id,
+                timesUpdatedToPending:
+                  taskStatus === "pending"
+                    ? data.timesUpdatedToPending + 1
+                    : data.timesUpdatedToPending,
+              },
+            })
+            .then((data) => {
+              return res.json(data);
+            })
+            .catch((err) => {
+              return res.status(400).send({
+                message: err["message"] ? err["message"] : "an error ocurred",
+              });
+            })
+            .finally(async () => {
+              await prisma.$disconnect();
+            });
+        })
+        .catch((err) => {
+          return res.status(400).send({
+            message: err["message"] ? err["message"] : "an error ocurred",
           });
-      });
+        });
     })
     .catch((err) => {
       return res.status(400).send({
         message: err["message"] ? err["message"] : "an error ocurred",
       });
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
     });
 });
 
