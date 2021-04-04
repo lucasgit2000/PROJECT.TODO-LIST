@@ -52,7 +52,7 @@ app.post("/tasks", (req, res) => {
   axios
     .get("http://apilayer.net/api/check", {
       params: {
-        access_key: 12345,
+        access_key: "f20f7ae318c34b92ee6a685fac758feb",
         email: supervisor_email,
       },
     })
@@ -89,24 +89,36 @@ app.post("/tasks", (req, res) => {
 });
 
 /* 
-    Create tasks for idle user
+    Create 3 tasks for idle user
 */
-app.post("/tasks/many/:quantity", (req, res) => {
-  const { quantity } = req.params;
-
-  const tasksToBeCreated = new Array(quantity);
-
-  for (let index = 0; index < tasksToBeCreated.length; index++) {
-    const randomDogFacts = ""; //TODO: ALEX WOHL BRUCK API
-    tasksToBeCreated[index] = { description: randomDogFacts };
-  }
-
-  prisma.task
-    .createMany({
-      data: tasksToBeCreated,
+app.post("/tasks/many", (req, res) => {
+  axios
+    .get("https://cat-fact.herokuapp.com/facts/random", {
+      params: {
+        animal_type: "dog",
+        amount: 3,
+      },
     })
-    .then((data) => {
-      return res.json([data]);
+    .then((response) => {
+      const tasksToBeCreated = new Array();
+
+      for (let index = 0; index < response.length; index++) {
+        const dogFact = response[index];
+
+        tasksToBeCreated[index] = {
+          description: dogFact.text,
+          supervisor_name: "Eu",
+          supervisor_email: "eu@me.com",
+        };
+      }
+
+      prisma.task
+        .createMany({
+          data: tasksToBeCreated,
+        })
+        .then((data) => {
+          return res.json([data]);
+        });
     })
     .catch((err) => {
       return res.status(400).send({
