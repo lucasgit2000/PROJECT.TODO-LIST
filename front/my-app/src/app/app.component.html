@@ -4,10 +4,62 @@
     <span>Aqui estão suas tarefas</span>
   </div>
   <div class="navbar-links">
-    <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task" (click)="NewTaskModalOpen = true">+</a>
+    <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task" (click)="open(content_new_task)">+</a>
     <a aria-label="Ocioso" title="Estou Ocioso" class="new-3task">+ 3</a>
   </div>
 </nav>
+
+<ng-template #content_new_task let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Nova Tarefa</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="description">Descrição da Tarefa</label>
+        <div class="input-group">
+          <textarea id="description" class="form-control" type="text"></textarea>
+        </div>
+        <label for="supervisor_name">Nome do Supervisor</label>
+        <div class="input-group">
+          <input id="supervisor_name" class="form-control" type="text">
+        </div>
+        <label for="supervisor_email">Email do Supervisor</label>
+        <div class="input-group">
+          <input id="supervisor_email" class="form-control" type="email">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>
+
+<ng-template #content_update_task let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Atualizar Tarefa como Pendente</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form autocomplete="off">
+      <div class="form-group">
+        <label for="password">Senha do Supervisor</label>
+        <div class="input-group">
+          <input id="password" class="form-control" type="password">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>
 
 <main class="main-content">
   <nav class="status-navigation">
@@ -21,19 +73,19 @@
   <div class="tasks">
     <ul>
       <li>
-        <div class="circle"></div>
+        <a class="circle" (click)="open(content_update_task)"></a>
         Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim.
       </li>
       <li>
-        <div class="circle"></div>
+        <a class="circle" (click)="open(content_update_task)"></a>
         Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim.
       </li>
       <li>
-        <div class="circle"></div>
+        <a class="circle" (click)="open(content_update_task)"></a>
         Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim.
       </li>
       <li>
-        <div class="circle"></div>
+        <a class="circle" (click)="open(content_update_task)"></a>
         Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim.
       </li>
     </ul>

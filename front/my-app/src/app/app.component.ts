@@ -6,6 +6,7 @@ import {
   faListAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import axios, { baseUrl } from './infrastructure/axios';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -18,14 +19,33 @@ export class AppComponent {
   faArrowLeft = faArrowLeft;
   faListAlt = faListAlt;
   faCheckSquare = faCheckSquare;
+  closeResult: string;
+
+  constructor(private modalService: NgbModal) {}
 
   public DoneTasks: Array<any>;
   public PendingTasks: Array<any>;
-  public NewTaskModalOpen: boolean = false;
-  public UpdateTaskModalOpen: boolean = false;
 
   ngOnInit() {
     this.populateTasksByStatus('pending');
+  }
+
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
   public async populateTasksByStatus(status: string) {
@@ -36,7 +56,6 @@ export class AppComponent {
         this.PendingTasks = await axios.get(`${baseUrl}/tasks/${status}`);
       console.log(this.DoneTasks);
       console.log(this.PendingTasks);
-      console.log(this.NewTaskModalOpen);
     } catch (error) {
       alert(error);
     }
@@ -58,9 +77,8 @@ export class AppComponent {
           })
         ).data
       );
-      this.NewTaskModalOpen = false;
-      console.log(this.NewTaskModalOpen);
       console.log(this.PendingTasks);
+      alert("new task created with success!")
     } catch (error) {
       alert(error);
     }
@@ -79,8 +97,7 @@ export class AppComponent {
         },
       });
       await this.populateTasksByStatus(taskStatus);
-      this.UpdateTaskModalOpen = false;
-      console.log(this.UpdateTaskModalOpen);
+      alert("task updated with success!")
     } catch (error) {
       alert(error);
     }
@@ -90,6 +107,7 @@ export class AppComponent {
       await axios.post(`${baseUrl}/tasks`);
       await this.populateTasksByStatus('pending');
       console.log(this.PendingTasks);
+      alert("3 new tasks were added with success!")
     } catch (error) {
       alert(error);
     }
