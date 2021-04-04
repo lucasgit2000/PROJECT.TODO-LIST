@@ -16,6 +16,8 @@ model Task {
   statusId              Int
   status                TaskStatuses @relation(fields: [statusId], references: [id])
   timesUpdatedToPending Int          @default(0)
+  supervisor_name       String @default("")
+  supervisor_email      String @default("")
 }
 
 model TaskStatuses {

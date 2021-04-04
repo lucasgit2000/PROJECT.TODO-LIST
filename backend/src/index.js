@@ -41,12 +41,16 @@ app.get("/tasks/:taskStatus", (req, res) => {
     Create task 
 */
 app.post("/tasks", (req, res) => {
-  const { description } = req.body;
+  const { description, supervisor_name, supervisor_email } = req.body;
+
+  //TODO: valid supervisor_email, not null
 
   prisma.task
     .create({
       data: {
         description,
+        supervisor_name,
+        supervisor_email
       },
     })
     .then((data) => {
