@@ -5,8 +5,7 @@ import {
   faCheckSquare,
   faListAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import axios, { baseUrl } from '../infrastructure/axios';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import axios, { baseUrl } from './infrastructure/axios';
 
 @Component({
   selector: 'app-root',
