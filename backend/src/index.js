@@ -1,5 +1,6 @@
 express = require("express");
 
+const axios = require("axios");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -43,15 +44,36 @@ app.get("/tasks/:taskStatus", (req, res) => {
 app.post("/tasks", (req, res) => {
   const { description, supervisor_name, supervisor_email } = req.body;
 
-  //TODO: valid supervisor_email, not null
+  if (!supervisor_email)
+    return res.status(400).send({
+      message: "please, make sure you have provided a valid supervisor email",
+    });
 
-  prisma.task
-    .create({
-      data: {
-        description,
-        supervisor_name,
-        supervisor_email
+  axios
+    .get("http://apilayer.net/api/check", {
+      params: {
+        access_key: 12345,
+        email: supervisor_email,
       },
+    })
+    .then((response) => {
+      if (!response.format_valid) {
+        const messageResponse =
+          !response.did_you_mean || response.did_you_mean === ""
+            ? `email format invalid, please try again`
+            : `email format invalid, didn't you mean ${response.did_you_mean}?`;
+
+        return res.status(400).send({
+          message: messageResponse,
+        });
+      }
+      prisma.task.create({
+        data: {
+          description,
+          supervisor_name,
+          supervisor_email,
+        },
+      });
     })
     .then((data) => {
       return res.json([data]);
