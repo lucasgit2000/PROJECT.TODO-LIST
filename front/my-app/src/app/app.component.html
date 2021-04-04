@@ -4,19 +4,19 @@
     <span>Aqui estão suas tarefas</span>
   </div>
   <div class="navbar-links">
-    <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task">+</a>
-    <a aria-label="Ocioso" title="Novas Tarefas Ocioso" class="new-3task">+ 3</a>
+    <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task" (click)="NewTaskModalOpen = true">+</a>
+    <a aria-label="Ocioso" title="Estou Ocioso" class="new-3task">+ 3</a>
   </div>
 </nav>
 
 <main class="main-content">
   <nav class="status-navigation">
-    <div class="pending-box">
+    <a class="pending-box" (click)="populateTasksByStatus('pending')">
       <fa-icon [icon]="faListAlt"></fa-icon>
-    </div>
-    <div class="done-box">
+    </a>
+    <a class="done-box" (click)="populateTasksByStatus('done')">
       <fa-icon [icon]="faCheckSquare"></fa-icon>
-    </div>
+    </a>
   </nav>
   <div class="tasks">
     <ul>

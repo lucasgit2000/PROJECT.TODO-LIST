@@ -1,4 +1,5 @@
 express = require("express");
+const cors = require('cors')
 
 const axios = require("axios");
 const { PrismaClient } = require("@prisma/client");
@@ -7,6 +8,7 @@ const statusConstants = require("../prisma/seed");
 
 const app = express();
 
+app.use(cors())
 app.use(express.json());
 
 /* 
