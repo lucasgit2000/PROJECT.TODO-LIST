@@ -1,15 +1,15 @@
 express = require("express");
 const cors = require("cors");
 
-const axios = require("axios");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-const statusConstants = require("../prisma/seed");
-
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+const axios = require("axios");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+const statusConstants = require("../prisma/seed");
 
 /* 
     Get tasks by status 
@@ -41,10 +41,10 @@ app.get("/tasks/:taskStatus", (req, res) => {
 });
 
 /* 
-    Create task 
-
-    ps: default status pending
-*/
+      Create task 
+  
+      ps: default status pending
+  */
 app.post("/tasks", (req, res) => {
   const { description, supervisor_name, supervisor_email } = req.body;
 
@@ -62,6 +62,7 @@ app.post("/tasks", (req, res) => {
       },
     })
     .then((response) => {
+      console.log(response);
       if (!response.data.format_valid || response.data.did_you_mean !== "") {
         const messageResponse =
           response.data.did_you_mean === ""
@@ -102,19 +103,20 @@ app.post("/tasks", (req, res) => {
 });
 
 /* 
-    Create 3 tasks for idle user
-
-    ps: default status pending
-*/
+      Create 3 tasks for idle user
+  
+      ps: default status pending
+  */
 app.post("/tasks/for_idle_user", (req, res) => {
   axios
     .get("https://cat-fact.herokuapp.com/facts/random", {
       params: {
         animal_type: "dog",
         amount: 3,
-      },
+      }
     })
     .then((response) => {
+      console.log(response);
       let tasksToBeCreated = new Array();
 
       for (let index = 0; index < response.data.length; index++) {
@@ -153,10 +155,10 @@ app.post("/tasks/for_idle_user", (req, res) => {
 });
 
 /* 
-    Update task status
-
-    ps: password only required if task was updated to pending more than twice
-*/
+      Update task status
+  
+      ps: password only required if task was updated to pending more than twice
+  */
 app.put("/tasks", (req, res) => {
   const { taskId, taskStatus, password } = req.body;
 
@@ -224,4 +226,10 @@ app.put("/tasks", (req, res) => {
     });
 });
 
-app.listen(3000);
+const port = 3000
+
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => console.log(`Listening on port ${port}`))
+}
+
+module.exports = app;
