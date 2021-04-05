@@ -4,8 +4,12 @@
     <span>Aqui estão suas tarefas</span>
   </div>
   <div class="navbar-links">
-    <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task" (click)="openModal(content_new_task)">+</a>
-    <a aria-label="Ocioso" title="Estou Ocioso" class="new-3task" (click)="newTasksForIdleUser()">+ 3</a>
+    <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task" (click)="openModal(content_new_task)">
+      <fa-icon [icon]="faPlus"></fa-icon>
+    </a>
+    <a aria-label="Ocioso" title="Estou Ocioso" class="new-3task" (click)="newTasksForIdleUser()">
+      <fa-icon [icon]="faHandHolding"></fa-icon>
+    </a>
   </div>
 </nav>
 
@@ -72,37 +76,31 @@
 
 <main class="main-content">
   <nav class="status-navigation">
-    <a class="pending-box" (click)="populateTasksByStatus('pending')">
+    <a class="pending-box" (click)="populateTasksByStatus('pending')" title="Tarefas Pendentes">
       <fa-icon [icon]="faListAlt"></fa-icon>
     </a>
-    <a class="done-box" (click)="populateTasksByStatus('done')">
+    <a class="done-box" (click)="populateTasksByStatus('done')" title="Tarefas Concluídas">
       <fa-icon [icon]="faCheckSquare"></fa-icon>
     </a>
   </nav>
   <div class="tasks">
     <ul *ngIf="DoneTabSelected">
       <li *ngFor="let task of DoneTasks">
-        <a class="circle" (click)="openModalWithTask(content_update_task, task)">
+        <a class="circle" (click)="openModalWithTask(content_update_task, task)" title="Tornar Pendente">
           <fa-icon [icon]="faCheck"></fa-icon>
         </a>
         {{task.description}}
       </li>
+      <span class="notasks-text" *ngIf="DoneTasks.length === 0">Você ainda concluiu nenhuma Tarefa</span>
     </ul>
     <ul *ngIf="!DoneTabSelected">
       <li *ngFor="let task of PendingTasks">
-        <a class="circle" (click)="updateTaskStatus(task)"></a>
+        <a class="circle" (click)="updateTaskStatus(task)" title="Concluir Tarefa"></a>
         {{task.description}}
       </li>
+      <span class="notasks-text" *ngIf="PendingTasks.length === 0">Parabéns! Você não possui Tarefas pendentes</span>
     </ul>
   </div>
 </main>
-<footer class="pagination">
-  <a aria-label="Página Anterior" title="Página Anterior" class="last-page">
-    <fa-icon [icon]="faArrowLeft"></fa-icon>
-  </a>
-  <a aria-label="Próxima Página" title="Próxima Página" class="next-page">
-    <fa-icon [icon]="faArrowRight"></fa-icon>
-  </a>
-</footer>
 
 <router-outlet></router-outlet>

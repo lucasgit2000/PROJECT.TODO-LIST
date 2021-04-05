@@ -16,8 +16,6 @@ app.use(express.json());
 */
 app.get("/tasks/:taskStatus", (req, res) => {
   const { taskStatus } = req.params;
-  //TODO: pagination
-
   prisma.task
     .findMany({
       where: {

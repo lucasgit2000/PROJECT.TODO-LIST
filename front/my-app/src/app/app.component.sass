@@ -13,19 +13,24 @@
     cursor: pointer
 
   .new-task
-    border: 1px solid black
+    border: 1px solid rgba(0,0,0,0.66)
     border-radius: 50%
     padding: 5px 11px 5px 11px
     text-align: center
 
+    &:hover
+        background: #e1e1e1
+
   .new-3task
-    border: 1px solid black
+    border: 1px solid rgba(0,0,0,0.66)
     border-radius: 50%
-    padding: 5px
+    padding: 5px 11px 5px 11px
     text-align: center
 
+    &:hover
+        background: #F8F8F8
+
 .main-content
-  // padding: 3rem
   margin: 50px 0 0 0
   display: flex
   flex-direction: column
@@ -49,6 +54,13 @@
       box-shadow: 7px 6px 18px -6px rgba(0,0,0,0.66)
       cursor: pointer
 
+      fa-icon
+        color: #3b5998
+        font-size: 32px
+
+      &:hover
+        background: #F8F8F8
+
     .done-box
       display: flex
       align-items: center
@@ -61,8 +73,22 @@
       box-shadow: 7px 6px 18px -6px rgba(0,0,0,0.66)
       cursor: pointer
 
+      fa-icon
+        color: #4BB543
+        font-size: 32px
+
+      &:hover
+        background: #F8F8F8
+
+
 .tasks
   font-size: 0.7rem
+
+  .notasks-text
+    color: #c4c4c4
+    font-size: 11px
+    text-align: center
+    width: 100%
 
   ul
     display: flex
@@ -77,29 +103,24 @@
   ul > li
     display: flex
     flex-direction: row
+    align-items: center
     margin-bottom: 60px
-    border: 1px solid black
+    border: 1px solid rgba(0,0,0,0.66)
     border-radius: 10px
     padding: 12px
+    width: 70%
+    height: 55px
+    text-align: justify
 
   ul > li > .circle
     margin-right: 20px
-    border: 1px solid black
+    border: 1px solid rgba(0,0,0,0.66)
     border-radius: 50%
-    width: 15px
+    width: 25px
+    height: 30px
     cursor: pointer
 
   fa-icon
     color: green
-    font-size: 14px
-
-.pagination
-  display: flex
-  flex-direction: row
-  position: absolute
-  bottom: 1
-  justify-content: space-evenly
-  width: 100%
-
-  a
-    cursor: pointer
+    font-size: 20px
+    text-align: center

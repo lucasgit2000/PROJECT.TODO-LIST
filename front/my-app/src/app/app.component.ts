@@ -5,6 +5,8 @@ import {
   faCheckSquare,
   faListAlt,
   faCheck,
+  faPlus,
+  faHandHolding
 } from '@fortawesome/free-solid-svg-icons';
 import axios, { baseUrl } from './infrastructure/axios';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -21,6 +23,8 @@ export class AppComponent {
   faListAlt = faListAlt;
   faCheckSquare = faCheckSquare;
   faCheck = faCheck;
+  faPlus = faPlus;
+  faHandHolding = faHandHolding;
   closeResult: string;
 
   constructor(private modalService: NgbModal) {}
@@ -55,8 +59,6 @@ export class AppComponent {
   }
 
   openModalWithTask(content, task) {
-    console.log("task");
-    console.log(task);
     this.task_update_id = task.id;
     this.task_update_status =
       task.status.description === 'done'
@@ -99,8 +101,6 @@ export class AppComponent {
         ).data;
         this.DoneTabSelected = false;
       }
-      console.log(this.DoneTasks);
-      console.log(this.PendingTasks);
     } catch (error) {
       alert(
         'error! ' + error.response && error.response !== undefined
@@ -117,21 +117,17 @@ export class AppComponent {
         supervisor_name: this.supervisor_name,
         supervisor_email: this.supervisor_email,
       };
-      const response = await axios.post(`${baseUrl}/tasks`, data);
-      console.log('newTask');
-      console.log(response);
+      await axios.post(`${baseUrl}/tasks`, data);
       await this.populateTasksByStatus('pending');
       alert('new task created with success!');
       this.modalService.dismissAll();
     } catch (error) {
-      console.log(error);
       alert(
         'error! ' + error.response && error.response !== undefined
           ? error.response.data.message
           : error
       );
     }
-    console.log(this.PendingTasks);
   }
 
   public async updateTaskStatus(task: any = null) {
@@ -167,7 +163,6 @@ export class AppComponent {
     try {
       await axios.post(`${baseUrl}/tasks/for_idle_user`);
       await this.populateTasksByStatus('pending');
-      console.log(this.PendingTasks);
       alert('3 new tasks were added with success!');
     } catch (error) {
       alert(
