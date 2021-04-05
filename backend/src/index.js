@@ -50,6 +50,7 @@ app.get("/tasks/:taskStatus", (req, res) => {
 app.post("/tasks", (req, res) => {
   const { description, supervisor_name, supervisor_email } = req.body;
 
+  console.log(supervisor_email, supervisor_name, description)
   if (!supervisor_email)
     return res.status(400).send({
       message: "please, make sure you have provided a valid supervisor email",

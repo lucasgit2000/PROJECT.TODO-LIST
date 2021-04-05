@@ -4,7 +4,7 @@
     <span>Aqui estão suas tarefas</span>
   </div>
   <div class="navbar-links">
-    <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task" (click)="open(content_new_task)">+</a>
+    <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task" (click)="openModal(content_new_task)">+</a>
     <a aria-label="Ocioso" title="Estou Ocioso" class="new-3task">+ 3</a>
   </div>
 </nav>
@@ -21,21 +21,23 @@
       <div class="form-group">
         <label for="description">Descrição da Tarefa</label>
         <div class="input-group">
-          <textarea id="description" class="form-control" type="text"></textarea>
+          <textarea id="description" class="form-control" type="text"
+            (change)="description = $event.target.value"></textarea>
         </div>
         <label for="supervisor_name">Nome do Supervisor</label>
         <div class="input-group">
-          <input id="supervisor_name" class="form-control" type="text">
+          <input id="supervisor_name" class="form-control" type="text" (change)="supervisor_name = $event.target.value">
         </div>
         <label for="supervisor_email">Email do Supervisor</label>
         <div class="input-group">
-          <input id="supervisor_email" class="form-control" type="email">
+          <input id="supervisor_email" class="form-control" type="email"
+            (change)="supervisor_email = $event.target.value">
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="newTask()">Concluir</button>
   </div>
 </ng-template>
 
@@ -51,13 +53,20 @@
       <div class="form-group">
         <label for="password">Senha do Supervisor</label>
         <div class="input-group">
-          <input id="password" class="form-control" type="password">
+          <input id="password" class="form-control" type="password"
+            (change)="supervisor_password = $event.target.value">
+        </div>
+        <div class="input-group" hidden="true">
+          <input id="task_id" class="form-control" type="number">
+        </div>
+        <div class="input-group" hidden="true">
+          <input id="task_status" class="form-control" type="text">
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="updateTaskStatus()">Concluir</button>
   </div>
 </ng-template>
 
@@ -71,22 +80,20 @@
     </a>
   </nav>
   <div class="tasks">
-    <ul>
-      <li>
-        <a class="circle" (click)="open(content_update_task)"></a>
-        Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim.
+    <ul *ngIf="DoneTabSelected">
+      <li *ngFor="let task of DoneTasks">
+        <a class="circle" (click)="openModalWithTask(content_update_task, task)">
+          <fa-icon [icon]="faCheck"></fa-icon>
+        </a>
+        {{task.description}}
       </li>
-      <li>
-        <a class="circle" (click)="open(content_update_task)"></a>
-        Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim.
-      </li>
-      <li>
-        <a class="circle" (click)="open(content_update_task)"></a>
-        Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim.
-      </li>
-      <li>
-        <a class="circle" (click)="open(content_update_task)"></a>
-        Nostrud sint et labore cupidatat culpa non irure et laboris ullamco commodo minim.
+    </ul>
+    <ul *ngIf="!DoneTabSelected">
+      <li *ngFor="let task of PendingTasks">
+        <a class="circle" (click)="openModalWithTask(content_update_task, task)">
+          <fa-icon [icon]="faCheck"></fa-icon>
+        </a>
+        {{task.description}}
       </li>
     </ul>
   </div>
