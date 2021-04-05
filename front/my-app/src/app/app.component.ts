@@ -55,7 +55,14 @@ export class AppComponent {
   }
 
   openModalWithTask(content, task) {
+    console.log("task");
     console.log(task);
+    this.task_update_id = task.id;
+    this.task_update_status =
+      task.status.description === 'done'
+        ? 'pending'
+        : task.status.description;
+
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(
@@ -115,6 +122,7 @@ export class AppComponent {
       console.log(response);
       await this.populateTasksByStatus('pending');
       alert('new task created with success!');
+      this.modalService.dismissAll();
     } catch (error) {
       console.log(error);
       alert(
@@ -124,20 +132,27 @@ export class AppComponent {
       );
     }
     console.log(this.PendingTasks);
-    this.modalService.dismissAll();
   }
 
-  public async updateTaskStatus() {
+  public async updateTaskStatus(task: any = null) {
     try {
-      await axios.put(`${baseUrl}/tasks`, {
-        data: {
-          taskId: this.task_update_id,
-          taskStatus: this.task_update_status,
-          password: this.supervisor_password,
-        },
-      });
-      await this.populateTasksByStatus(this.task_update_status);
+      if (task !== null) {
+        this.task_update_id = task.id;
+        this.task_update_status =
+          task.status.description === 'pending'
+            ? 'done'
+            : task.status.description;
+        this.supervisor_password = null;
+      }
+      const data = {
+        taskId: this.task_update_id,
+        taskStatus: this.task_update_status,
+        password: this.supervisor_password,
+      };
+      await axios.put(`${baseUrl}/tasks`, data);
+      await this.populateTasksByStatus(this.DoneTabSelected ? "done" : "pending");
       alert('task updated with success!');
+      this.modalService.dismissAll();
     } catch (error) {
       alert(
         'error! ' + error.response && error.response !== undefined
@@ -150,7 +165,7 @@ export class AppComponent {
 
   public async newTasksForIdleUser() {
     try {
-      await axios.post(`${baseUrl}/tasks`);
+      await axios.post(`${baseUrl}/tasks/for_idle_user`);
       await this.populateTasksByStatus('pending');
       console.log(this.PendingTasks);
       alert('3 new tasks were added with success!');

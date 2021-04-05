@@ -5,7 +5,7 @@
   </div>
   <div class="navbar-links">
     <a aria-label="Adicionar tarefa" title="Nova Tarefa" class="new-task" (click)="openModal(content_new_task)">+</a>
-    <a aria-label="Ocioso" title="Estou Ocioso" class="new-3task">+ 3</a>
+    <a aria-label="Ocioso" title="Estou Ocioso" class="new-3task" (click)="newTasksForIdleUser()">+ 3</a>
   </div>
 </nav>
 
@@ -90,9 +90,7 @@
     </ul>
     <ul *ngIf="!DoneTabSelected">
       <li *ngFor="let task of PendingTasks">
-        <a class="circle" (click)="openModalWithTask(content_update_task, task)">
-          <fa-icon [icon]="faCheck"></fa-icon>
-        </a>
+        <a class="circle" (click)="updateTaskStatus(task)"></a>
         {{task.description}}
       </li>
     </ul>

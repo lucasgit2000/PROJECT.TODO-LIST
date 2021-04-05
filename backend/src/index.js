@@ -1,5 +1,5 @@
 express = require("express");
-const cors = require('cors')
+const cors = require("cors");
 
 const axios = require("axios");
 const { PrismaClient } = require("@prisma/client");
@@ -8,7 +8,7 @@ const statusConstants = require("../prisma/seed");
 
 const app = express();
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 
 /* 
@@ -50,7 +50,7 @@ app.get("/tasks/:taskStatus", (req, res) => {
 app.post("/tasks", (req, res) => {
   const { description, supervisor_name, supervisor_email } = req.body;
 
-  console.log(supervisor_email, supervisor_name, description)
+  console.log(supervisor_email, supervisor_name, description);
   if (!supervisor_email)
     return res.status(400).send({
       message: "please, make sure you have provided a valid supervisor email",
@@ -173,20 +173,19 @@ app.put("/tasks", (req, res) => {
       prisma.task
         .findFirst({ where: { id: taskId } })
         .then((data) => {
-          console.log(data);
+          if (taskStatus === "pending" && password !== "TrabalheNaSaipos")
+            return res.status(400).send({
+              message: "incorrect password",
+            });
+
           if (!data)
             return res.status(400).send({
               message: "task doesn't exist",
             });
 
-          if (data.timesUpdatedToPending >= 2)
+          if (taskStatus === "pending" && data.timesUpdatedToPending >= 2)
             return res.status(400).send({
               message: "task reached pending status update limit",
-            });
-
-          if (taskStatus === "pending" && password !== "TrabalheNaSaipos")
-            return res.status(400).send({
-              message: "incorrect password",
             });
 
           prisma.task
